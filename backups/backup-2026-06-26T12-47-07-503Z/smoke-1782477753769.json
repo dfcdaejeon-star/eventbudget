@@ -1,0 +1,28 @@
+{
+  "id": "smoke-1782477753769",
+  "name": "Smoke Test Event",
+  "organizer": "Tester",
+  "financeManager": "Tester",
+  "period": "today",
+  "notes": "auto-generated",
+  "incomes": [
+    {
+      "id": "i1",
+      "category": "test",
+      "description": "d",
+      "amount": 1000,
+      "note": ""
+    }
+  ],
+  "expenses": [
+    {
+      "id": "e1",
+      "date": "2026-01-01",
+      "department": "ops",
+      "purpose": "test",
+      "item": "item",
+      "amount": 500,
+      "note": ""
+    }
+  ]
+}
