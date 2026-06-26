@@ -1,0 +1,12 @@
+RewriteEngine On
+
+# 실제 파일/디렉터리는 직접 서빙 (uploads 등)
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# /api/* 요청은 PHP 라우터로
+RewriteRule ^api(/.*)?$ api/index.php [QSA,L]
+
+# 나머지는 SPA index.html로
+RewriteRule ^ index.html [L]

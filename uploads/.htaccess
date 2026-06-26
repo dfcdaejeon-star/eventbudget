@@ -1,0 +1,3 @@
+# uploads 디렉터리에서 PHP 실행 금지 (보안)
+php_flag engine off
+AddType text/plain .php .phtml .php3 .php4 .php5
