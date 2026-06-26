@@ -6,6 +6,10 @@
 
 // ── 헤더 ─────────────────────────────────────────────────────────────
 
+// 디버그: 500 오류 원인 확인용 (문제 해결 후 아래 두 줄 삭제)
+ini_set('display_errors', '1');
+error_reporting(E_ALL);
+
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS');
@@ -252,13 +256,13 @@ function compress_image(string $filePath, string $eventId): string
     $info = @getimagesize($filePath);
     if (!$info) { return basename($filePath); }
 
-    $image = match ($info['mime']) {
-        'image/jpeg' => @imagecreatefromjpeg($filePath),
-        'image/png'  => @imagecreatefrompng($filePath),
-        'image/gif'  => @imagecreatefromgif($filePath),
-        'image/webp' => @imagecreatefromwebp($filePath),
-        default      => null,
-    };
+    switch ($info['mime']) {
+        case 'image/jpeg': $image = @imagecreatefromjpeg($filePath); break;
+        case 'image/png':  $image = @imagecreatefrompng($filePath);  break;
+        case 'image/gif':  $image = @imagecreatefromgif($filePath);  break;
+        case 'image/webp': $image = @imagecreatefromwebp($filePath); break;
+        default:           $image = null;
+    }
     if (!$image) { return basename($filePath); }
 
     // 1600px 초과 시 축소
@@ -309,7 +313,7 @@ function load_all_events(): array
         $data = json_decode(file_get_contents($file), true);
         if (is_array($data) && isset($data['id'])) { $events[] = $data; }
     }
-    usort($events, fn($a, $b) => strcmp($a['name'] ?? '', $b['name'] ?? ''));
+    usort($events, function($a, $b) { return strcmp($a['name'] ?? '', $b['name'] ?? ''); });
     return $events;
 }
 
@@ -352,7 +356,7 @@ function json_input(): array
     return is_array($data) ? $data : [];
 }
 
-function json_error(int $code, string $message, ?array $details = null): never
+function json_error(int $code, string $message, ?array $details = null): void
 {
     http_response_code($code);
     $body = ['error' => $message];
